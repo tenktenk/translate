@@ -4,7 +4,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/tenktenk/translate/quadtree"
+	"github.com/tenktenk/translate/go/quadtree"
 )
 
 // test gif output

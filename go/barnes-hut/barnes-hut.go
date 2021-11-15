@@ -32,7 +32,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tenktenk/translate/quadtree"
+	"github.com/tenktenk/translate/go/quadtree"
 )
 
 // constant to be added to the distance between bodies

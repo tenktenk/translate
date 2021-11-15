@@ -4,7 +4,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/tenktenk/translate/quadtree"
+	"github.com/tenktenk/translate/go/quadtree"
 )
 
 // a RepulsionField stores the computation

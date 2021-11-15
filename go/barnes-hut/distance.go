@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"sync/atomic"
 
-	"github.com/tenktenk/translate/quadtree"
+	"github.com/tenktenk/translate/go/quadtree"
 )
 
 // get modulo distance between alpha and beta.

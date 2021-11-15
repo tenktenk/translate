@@ -1,7 +1,7 @@
 package translation
 
 import (
-	"github.com/tenktenk/translate/quadtree"
+	"github.com/tenktenk/translate/go/quadtree"
 )
 
 type Village struct {

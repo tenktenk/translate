@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/tenktenk/translate/quadtree"
+	"github.com/tenktenk/translate/go/quadtree"
 )
 
 // MacBook-Pro-de-Thomas:barnes-hut thomaspeugeot$ go test -bench=.
