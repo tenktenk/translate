@@ -2,10 +2,6 @@ package models
 
 import "github.com/tenktenk/translate/go/grump"
 
-/* import (
-	"github.com/tenktenk/translate/grump"
-) */
-
 // Singloton pointing to the current translation
 // the singloton can be autocally initiated if it is nil
 var translateCurrent Translation
@@ -37,6 +33,7 @@ func GetTranslateCurrent() *Translation {
 
 		mapOfCountries = make(map[string]*CountryWithBodies)
 
+		// stage the country
 		for _, countrySpec := range countrySpecs {
 			country := (&CountryWithBodies{
 				Country: grump.Country{
