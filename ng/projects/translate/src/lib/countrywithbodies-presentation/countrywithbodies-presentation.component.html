@@ -1,0 +1,45 @@
+
+<div class="presentation__header" (click)="setEditorRouterOutlet(countrywithbodies.ID)">
+    <h1>CountryWithBodies's fields <span class="material-icons">edit</span></h1>
+</div>
+<table *ngIf="countrywithbodies" class="presentation__table mat-table">
+    <tr class="mat-header-row">
+        <th class="mat-header-cell">Name</th>
+        <th class="mat-header-cell">Value</th>
+    </tr>
+    <!-- insertion point for fields specific code -->
+    <tr class="mat-row">
+        <td class="mat-cell">Name</td>
+        <td class="mat-cell">{{countrywithbodies.Name}}</td>
+    </tr>
+    <tr class="mat-row">
+        <td class="mat-cell">NCols</td>
+        <td class="mat-cell">{{countrywithbodies.NCols}}</td>
+    </tr>
+    <tr class="mat-row">
+        <td class="mat-cell">NRows</td>
+        <td class="mat-cell">{{countrywithbodies.NRows}}</td>
+    </tr>
+    <tr class="mat-row">
+        <td class="mat-cell">XllCorner</td>
+        <td class="mat-cell">{{countrywithbodies.XllCorner}}</td>
+    </tr>
+    <tr class="mat-row">
+        <td class="mat-cell">YllCorner</td>
+        <td class="mat-cell">{{countrywithbodies.YllCorner}}</td>
+    </tr>
+    <tr class="mat-row">
+        <td class="mat-cell">NbBodies</td>
+        <td class="mat-cell">{{countrywithbodies.NbBodies}}</td>
+    </tr>
+    <tr class="mat-row">
+        <td class="mat-cell">Step</td>
+        <td class="mat-cell">{{countrywithbodies.Step}}</td>
+    </tr>
+</table>
+<!-- hack to force loading of mat table style an error is generated but it is a know angular issue https://github.com/angular/components/issues/10941 -->
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <!-- Position Column -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

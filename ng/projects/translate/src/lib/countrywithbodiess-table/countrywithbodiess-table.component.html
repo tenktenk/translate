@@ -1,0 +1,107 @@
+<div>
+    <mat-form-field>
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>
+    </mat-form-field>
+    <h1 *ngIf="dialogData">countrywithbodies</h1>
+    <table class="table" mat-table [dataSource]="matTableDataSource" matSort>
+        <!-- Checkbox Column -->
+        <ng-container matColumnDef="select" sticky>
+            <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()">
+                </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                </mat-checkbox>
+            </td>
+        </ng-container>
+
+        <!-- insertion point for fields specific code -->
+        <!-- -->
+        <ng-container matColumnDef="Name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+            <td mat-cell *matCellDef="let CountryWithBodies">
+                {{CountryWithBodies.Name}}
+            </td>
+        </ng-container>
+        <!-- -->
+        <ng-container matColumnDef="NCols">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> NCols </th>
+            <td mat-cell *matCellDef="let CountryWithBodies">
+                {{CountryWithBodies.NCols}}
+            </td>
+        </ng-container>
+        <!-- -->
+        <ng-container matColumnDef="NRows">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> NRows </th>
+            <td mat-cell *matCellDef="let CountryWithBodies">
+                {{CountryWithBodies.NRows}}
+            </td>
+        </ng-container>
+        <!-- -->
+        <ng-container matColumnDef="XllCorner">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> XllCorner </th>
+            <td mat-cell *matCellDef="let CountryWithBodies">
+                {{CountryWithBodies.XllCorner.toPrecision(5)}}
+            </td>
+        </ng-container>
+        <!-- -->
+        <ng-container matColumnDef="YllCorner">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> YllCorner </th>
+            <td mat-cell *matCellDef="let CountryWithBodies">
+                {{CountryWithBodies.YllCorner.toPrecision(5)}}
+            </td>
+        </ng-container>
+        <!-- -->
+        <ng-container matColumnDef="NbBodies">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> NbBodies </th>
+            <td mat-cell *matCellDef="let CountryWithBodies">
+                {{CountryWithBodies.NbBodies}}
+            </td>
+        </ng-container>
+        <!-- -->
+        <ng-container matColumnDef="Step">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Step </th>
+            <td mat-cell *matCellDef="let CountryWithBodies">
+                {{CountryWithBodies.Step}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ID" sticky>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ID. </th>
+            <td mat-cell *matCellDef="let CountryWithBodies"> {{CountryWithBodies.ID}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Edit">
+            <th mat-header-cell *matHeaderCellDef> Edit </th>
+            <td mat-cell *matCellDef="let countrywithbodies;  let j = index;">
+                <i class="material-icons" [ngStyle]="{'color':'rgba(0,0,0,.50)'}" (click)="setEditorRouterOutlet(countrywithbodies.ID)">edit</i>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Delete">
+            <th mat-header-cell *matHeaderCellDef> Delete </th>
+            <td mat-cell *matCellDef="let countrywithbodies;  let j = index;">
+                <i class="material-icons" [ngStyle]="{'color':'rgba(0,0,0,.50)'}" (click)="deleteCountryWithBodies(countrywithbodies.ID, countrywithbodies)">delete</i>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+
+        <tr mat-row *matRowDef="
+        let row; 
+        columns: displayedColumns;
+        " (click)="setPresentationRouterOutlet( row.ID ) " class="row-link">
+        </tr>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+        </tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[10, 20, 50, 100, 500, 1000]" showFirstLastButtons></mat-paginator>
+</div>
+<button class="table__save" color="primary" *ngIf="dialogData" mat-raised-button (click)="save()">
+    Save
+</button>

@@ -1,0 +1,66 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Edge",
+            "request": "launch",
+            "type": "pwa-msedge",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}/ng"
+        },
+        {
+            "type": "pwa-chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}/ng"
+        },
+        {
+            "name": "Front Simple on local 4200",
+            "runtimeArgs": [
+                "--remote-debugging-port=9222"
+            ],
+            "runtimeExecutable": "${env:CHROME_EXE}",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:4200/",
+            "webRoot": "${workspaceFolder}/ng"
+        },
+        {
+            "name": "go server",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}",
+            "args": [
+                "samplefile.xlsx"
+            ]
+        },
+        {
+            "name": "Launch firefox localhost:4200",
+            "type": "firefox",
+            "request": "launch",
+            "firefoxExecutable": "C:/Users/peugeot/AppData/Local/Microsoft/AppV/Client/Integration/F8B22858-413B-4241-955C-7CDA2C0B6696/Root/VFS/ProgramFilesX64/Mozilla Firefox/firefox.exe",
+            "reAttach": true,
+            "url": "http://localhost:4200/",
+            "webRoot": "${workspaceFolder}/ng",
+            "reloadOnChange": {
+                "watch": [
+                    "${workspaceFolder}/**/*.js"
+                ],
+                "ignore": [
+                    "${workspaceFolder}/node_modules/**"
+                ]
+            },
+            "pathMappings": [
+                {
+                    "url": "webpack:///projects",
+                    "path": "${workspaceFolder}/ng/projects"
+                }
+            ]
+        }
+    ]
+}

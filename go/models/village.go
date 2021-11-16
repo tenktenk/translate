@@ -1,4 +1,4 @@
-package translation
+package models
 
 import (
 	"github.com/tenktenk/translate/go/quadtree"

@@ -1,7 +1,4 @@
-/*
-Package translation provides functions for managing a translation between two countries.
-*/
-package translation
+package models
 
 /* import (
 	"github.com/tenktenk/translate/grump"

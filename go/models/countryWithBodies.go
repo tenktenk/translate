@@ -1,4 +1,4 @@
-package translation
+package models
 
 import (
 	"archive/zip"
