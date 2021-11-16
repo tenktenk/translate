@@ -1,5 +1,7 @@
 package models
 
+import "github.com/tenktenk/translate/go/grump"
+
 /* import (
 	"github.com/tenktenk/translate/grump"
 ) */
@@ -19,10 +21,10 @@ type CountrySpec struct {
 // should have done this array directly with CountryWithBodies but
 // aint compile even with
 // 	CountryWithBodies{Name: "fra", NbBodies: 934136, Step: 8725},
-var countrySpecs = []CountrySpec{
-	CountrySpec{Name: "fra", NbBodies: 934136, Step: 8725},
-	CountrySpec{Name: "hti", NbBodies: 190948, Step: 1334},
-	CountrySpec{Name: "usa", NbBodies: 1422837, Step: 2735},
+var countrySpecs = []*CountrySpec{
+	(&CountrySpec{Name: "fra", NbBodies: 934136, Step: 8725}).Stage(),
+	(&CountrySpec{Name: "hti", NbBodies: 190948, Step: 1334}).Stage(),
+	(&CountrySpec{Name: "usa", NbBodies: 1422837, Step: 2735}).Stage(),
 	// CountrySpec{Name: "chn", NbBodies: 771973, Step: 2531},
 	// CountrySpec{Name: "rus", NbBodies: 509497, Step: 3386},
 }
@@ -36,13 +38,17 @@ func GetTranslateCurrent() *Translation {
 		mapOfCountries = make(map[string]*CountryWithBodies)
 
 		for _, countrySpec := range countrySpecs {
-			country := CountryWithBodies{}
-			country.Name = countrySpec.Name
-			country.NbBodies = countrySpec.NbBodies
-			country.Step = countrySpec.Step
+			country := (&CountryWithBodies{
+				Country: grump.Country{
+					Name: countrySpec.Name,
+				},
+				NbBodies: countrySpec.NbBodies,
+				Step:     countrySpec.Step,
+			}).Stage()
+
 			country.Init()
 
-			mapOfCountries[country.Name] = &country
+			mapOfCountries[country.Name] = country
 		}
 
 		translateCurrent.sourceCountry = mapOfCountries["fra"]
