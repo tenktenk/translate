@@ -16,3 +16,7 @@
 .DS_Store
 go/cmd/translate/translate
 go/cmd/translate/test.db
+
+gini_out.csv
+status_out.csv
+conf*.gif

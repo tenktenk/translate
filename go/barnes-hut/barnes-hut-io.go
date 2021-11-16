@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -97,17 +98,10 @@ func (r *Run) CaptureConfigBase64() bool {
 
 // load configuration from filename (does not contain path)
 // works only if state is STOPPED
-func (r *Run) LoadConfig(filename string) bool {
+func (r *Run) LoadConfig(path string, filename string) bool {
 	Info.Printf("LoadConfig file %s", filename)
 
 	if r.state == STOPPED {
-
-		renderingMutex.Lock()
-		file, err := os.Open(filename)
-		if err != nil {
-			log.Fatal(err)
-			return false
-		}
 
 		// get the number of steps in the file name
 		// var countryName string
@@ -135,6 +129,14 @@ func (r *Run) LoadConfig(filename string) bool {
 			return false
 		}
 		Trace.Printf("nb item parsed in file name %d (should be one)\n", nbItems)
+
+		filename = filepath.Join("../../../countries_input", filename)
+		renderingMutex.Lock()
+		file, err := os.Open(filename)
+		if err != nil {
+			log.Fatal(err)
+			return false
+		}
 
 		jsonParser := json.NewDecoder(file)
 		if err = jsonParser.Decode(r.bodies); err != nil {

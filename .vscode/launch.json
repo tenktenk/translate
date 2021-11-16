@@ -30,13 +30,17 @@
             "webRoot": "${workspaceFolder}/ng"
         },
         {
-            "name": "go server",
+            "name": "go simulation server",
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${workspaceFolder}",
+            "program": "${workspaceFolder}/go/sim_server",
             "args": [
-                "samplefile.xlsx"
+                "-sourceCountry",
+                "hti",
+                "-sourceCountryNbBodies",
+                "190948",
+                "-start"
             ]
         },
         {
