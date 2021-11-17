@@ -38,18 +38,18 @@ func main() {
 
 	flag.Parse()
 
-	// init sourceCountry from flags
-	var sourceCountry models.CountryWithBodies
-	sourceCountry.Name = *sourceCountryPtr
+	// init sourceCountryWithBodies from flags
+	var sourceCountryWithBodies models.CountryWithBodies
+	sourceCountryWithBodies.Name = *sourceCountryPtr
 	{
-		_, errScan := fmt.Sscanf(*sourceCountryNbBodiesPtr, "%d", &sourceCountry.NbBodies)
+		_, errScan := fmt.Sscanf(*sourceCountryNbBodiesPtr, "%d", &sourceCountryWithBodies.NbBodies)
 		if errScan != nil {
 			log.Fatal(errScan)
 			return
 		}
 	}
 	{
-		_, errScan := fmt.Sscanf(*sourceCountryStepPtr, "%d", &sourceCountry.Step)
+		_, errScan := fmt.Sscanf(*sourceCountryStepPtr, "%d", &sourceCountryWithBodies.Step)
 		if errScan != nil {
 			log.Fatal(errScan)
 			return
@@ -88,9 +88,9 @@ func main() {
 	// load configuration files.
 	filename := fmt.Sprintf(
 		barneshut.CountryBodiesNamePattern,
-		sourceCountry.Name,
-		sourceCountry.NbBodies,
-		sourceCountry.Step)
+		sourceCountryWithBodies.Name,
+		sourceCountryWithBodies.NbBodies,
+		sourceCountryWithBodies.Step)
 
 	server.Info.Printf("filename for init %s", filename)
 	r.LoadConfig("../../../countries_input", filename)

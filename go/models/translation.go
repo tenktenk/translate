@@ -7,7 +7,7 @@ import "github.com/tenktenk/translate/go/grump"
 var translateCurrent Translation
 
 // storage for all countries
-var mapOfCountries map[string]*CountryWithBodies = nil
+var mapOfCountryWithBodies map[string]*CountryWithBodies = nil
 
 type CountrySpec struct {
 	Name           string
@@ -29,9 +29,9 @@ var countrySpecs = []*CountrySpec{
 func GetTranslateCurrent() *Translation {
 
 	// check if the current translation is void.
-	if mapOfCountries == nil {
+	if mapOfCountryWithBodies == nil {
 
-		mapOfCountries = make(map[string]*CountryWithBodies)
+		mapOfCountryWithBodies = make(map[string]*CountryWithBodies)
 
 		// stage the country
 		for _, countrySpec := range countrySpecs {
@@ -45,11 +45,11 @@ func GetTranslateCurrent() *Translation {
 
 			country.Init()
 
-			mapOfCountries[country.Name] = country
+			mapOfCountryWithBodies[country.Name] = country
 		}
 
-		translateCurrent.sourceCountry = mapOfCountries["fra"]
-		translateCurrent.targetCountry = mapOfCountries["hti"]
+		translateCurrent.sourceCountryWithBodies = mapOfCountryWithBodies["fra"]
+		translateCurrent.targetCountryWithBodies = mapOfCountryWithBodies["hti"]
 	}
 
 	return &translateCurrent
@@ -57,57 +57,57 @@ func GetTranslateCurrent() *Translation {
 
 // Definition of a translation between a source and a target country
 type Translation struct {
-	sourceCountry *CountryWithBodies
-	targetCountry *CountryWithBodies
+	sourceCountryWithBodies *CountryWithBodies
+	targetCountryWithBodies *CountryWithBodies
 }
 
 func (t *Translation) GetSourceCountryName() string {
-	return t.sourceCountry.Name
+	return t.sourceCountryWithBodies.Name
 }
 
 func (t *Translation) SetSourceCountry(name string) {
-	t.sourceCountry = mapOfCountries[name]
+	t.sourceCountryWithBodies = mapOfCountryWithBodies[name]
 }
 
 func (t *Translation) GetTargetCountryName() string {
-	return t.targetCountry.Name
+	return t.targetCountryWithBodies.Name
 }
 
 func (t *Translation) SetTargetCountry(name string) {
-	t.targetCountry = mapOfCountries[name]
+	t.targetCountryWithBodies = mapOfCountryWithBodies[name]
 }
 
 // from lat, lng in source country, find the closest body in source country
 func (t *Translation) BodyCoordsInSourceCountry(lat, lng float64) (distance, latClosest, lngClosest, xSpread, ySpread float64, closestIndex int) {
 
 	// convert from lat lng to x, y in the Country
-	return t.sourceCountry.ClosestBodyInOriginalPosition(lat, lng)
+	return t.sourceCountryWithBodies.ClosestBodyInOriginalPosition(lat, lng)
 }
 
 // from lat, lng in source country, find the closest body in source country
 func (t *Translation) BodyCoordsInTargetCountry(lat, lng float64) (distance, latClosest, lngClosest, xSpread, ySpread float64, closestIndex int) {
 
 	// convert from lat lng to x, y in the Country
-	return t.targetCountry.ClosestBodyInOriginalPosition(lat, lng)
+	return t.targetCountryWithBodies.ClosestBodyInOriginalPosition(lat, lng)
 }
 
 // from x, y get closest body lat/lng in target country
 func (t *Translation) LatLngToXYInTargetCountry(x, y float64) (latTarget, lngTarget float64) {
 
-	return t.targetCountry.XYToLatLng(x, y)
+	return t.targetCountryWithBodies.XYToLatLng(x, y)
 }
 
 // from a coordinate in source coutry, get border
 func (t *Translation) TargetBorder(x, y float64) PointList {
 
-	return t.targetCountry.XYtoTerritoryBodies(x, y)
+	return t.targetCountryWithBodies.XYtoTerritoryBodies(x, y)
 }
 
 func (t *Translation) SourceBorder(lat, lng float64) PointList {
 
 	Info.Printf("Source Border for lat %f lng %f", lat, lng)
 
-	points := t.sourceCountry.LatLngToTerritoryBorder(lat, lng)
+	points := t.sourceCountryWithBodies.LatLngToTerritoryBorder(lat, lng)
 
 	Info.Printf("Source Border nb of points %d", len(points))
 
