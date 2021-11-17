@@ -10,6 +10,9 @@ import { CountrySpecService } from './countryspec.service'
 import { CountryWithBodiesDB } from './countrywithbodies-db'
 import { CountryWithBodiesService } from './countrywithbodies.service'
 
+import { TranslationDB } from './translation-db'
+import { TranslationService } from './translation.service'
+
 
 // FrontRepo stores all instances in a front repository (design pattern repository)
 export class FrontRepo { // insertion point sub template 
@@ -19,6 +22,9 @@ export class FrontRepo { // insertion point sub template
   CountryWithBodiess_array = new Array<CountryWithBodiesDB>(); // array of repo instances
   CountryWithBodiess = new Map<number, CountryWithBodiesDB>(); // map of repo instances
   CountryWithBodiess_batch = new Map<number, CountryWithBodiesDB>(); // same but only in last GET (for finding repo instances to delete)
+  Translations_array = new Array<TranslationDB>(); // array of repo instances
+  Translations = new Map<number, TranslationDB>(); // map of repo instances
+  Translations_batch = new Map<number, TranslationDB>(); // same but only in last GET (for finding repo instances to delete)
 }
 
 //
@@ -79,6 +85,7 @@ export class FrontRepoService {
     private http: HttpClient, // insertion point sub template 
     private countryspecService: CountrySpecService,
     private countrywithbodiesService: CountryWithBodiesService,
+    private translationService: TranslationService,
   ) { }
 
   // postService provides a post function for each struct name
@@ -111,9 +118,11 @@ export class FrontRepoService {
   observableFrontRepo: [ // insertion point sub template 
     Observable<CountrySpecDB[]>,
     Observable<CountryWithBodiesDB[]>,
+    Observable<TranslationDB[]>,
   ] = [ // insertion point sub template 
       this.countryspecService.getCountrySpecs(),
       this.countrywithbodiesService.getCountryWithBodiess(),
+      this.translationService.getTranslations(),
     ];
 
   //
@@ -131,6 +140,7 @@ export class FrontRepoService {
           ([ // insertion point sub template for declarations 
             countryspecs_,
             countrywithbodiess_,
+            translations_,
           ]) => {
             // Typing can be messy with many items. Therefore, type casting is necessary here
             // insertion point sub template for type casting 
@@ -138,6 +148,8 @@ export class FrontRepoService {
             countryspecs = countryspecs_ as CountrySpecDB[]
             var countrywithbodiess: CountryWithBodiesDB[]
             countrywithbodiess = countrywithbodiess_ as CountryWithBodiesDB[]
+            var translations: TranslationDB[]
+            translations = translations_ as TranslationDB[]
 
             // 
             // First Step: init map of instances
@@ -208,6 +220,39 @@ export class FrontRepoService {
               return 0;
             });
 
+            // init the array
+            FrontRepoSingloton.Translations_array = translations
+
+            // clear the map that counts Translation in the GET
+            FrontRepoSingloton.Translations_batch.clear()
+
+            translations.forEach(
+              translation => {
+                FrontRepoSingloton.Translations.set(translation.ID, translation)
+                FrontRepoSingloton.Translations_batch.set(translation.ID, translation)
+              }
+            )
+
+            // clear translations that are absent from the batch
+            FrontRepoSingloton.Translations.forEach(
+              translation => {
+                if (FrontRepoSingloton.Translations_batch.get(translation.ID) == undefined) {
+                  FrontRepoSingloton.Translations.delete(translation.ID)
+                }
+              }
+            )
+
+            // sort Translations_array array
+            FrontRepoSingloton.Translations_array.sort((t1, t2) => {
+              if (t1.Name > t2.Name) {
+                return 1;
+              }
+              if (t1.Name < t2.Name) {
+                return -1;
+              }
+              return 0;
+            });
+
 
             // 
             // Second Step: redeem pointers between instances (thanks to maps in the First Step)
@@ -222,6 +267,27 @@ export class FrontRepoService {
             countrywithbodiess.forEach(
               countrywithbodies => {
                 // insertion point sub sub template for ONE-/ZERO-ONE associations pointers redeeming
+
+                // insertion point for redeeming ONE-MANY associations
+              }
+            )
+            translations.forEach(
+              translation => {
+                // insertion point sub sub template for ONE-/ZERO-ONE associations pointers redeeming
+                // insertion point for pointer field SourceCountryWithBodies redeeming
+                {
+                  let _countrywithbodies = FrontRepoSingloton.CountryWithBodiess.get(translation.SourceCountryWithBodiesID.Int64)
+                  if (_countrywithbodies) {
+                    translation.SourceCountryWithBodies = _countrywithbodies
+                  }
+                }
+                // insertion point for pointer field TargetCountryWithBodies redeeming
+                {
+                  let _countrywithbodies = FrontRepoSingloton.CountryWithBodiess.get(translation.TargetCountryWithBodiesID.Int64)
+                  if (_countrywithbodies) {
+                    translation.TargetCountryWithBodies = _countrywithbodies
+                  }
+                }
 
                 // insertion point for redeeming ONE-MANY associations
               }
@@ -338,6 +404,71 @@ export class FrontRepoService {
       }
     )
   }
+
+  // TranslationPull performs a GET on Translation of the stack and redeem association pointers 
+  TranslationPull(): Observable<FrontRepo> {
+    return new Observable<FrontRepo>(
+      (observer) => {
+        combineLatest([
+          this.translationService.getTranslations()
+        ]).subscribe(
+          ([ // insertion point sub template 
+            translations,
+          ]) => {
+            // init the array
+            FrontRepoSingloton.Translations_array = translations
+
+            // clear the map that counts Translation in the GET
+            FrontRepoSingloton.Translations_batch.clear()
+
+            // 
+            // First Step: init map of instances
+            // insertion point sub template 
+            translations.forEach(
+              translation => {
+                FrontRepoSingloton.Translations.set(translation.ID, translation)
+                FrontRepoSingloton.Translations_batch.set(translation.ID, translation)
+
+                // insertion point for redeeming ONE/ZERO-ONE associations
+                // insertion point for pointer field SourceCountryWithBodies redeeming
+                {
+                  let _countrywithbodies = FrontRepoSingloton.CountryWithBodiess.get(translation.SourceCountryWithBodiesID.Int64)
+                  if (_countrywithbodies) {
+                    translation.SourceCountryWithBodies = _countrywithbodies
+                  }
+                }
+                // insertion point for pointer field TargetCountryWithBodies redeeming
+                {
+                  let _countrywithbodies = FrontRepoSingloton.CountryWithBodiess.get(translation.TargetCountryWithBodiesID.Int64)
+                  if (_countrywithbodies) {
+                    translation.TargetCountryWithBodies = _countrywithbodies
+                  }
+                }
+
+                // insertion point for redeeming ONE-MANY associations
+              }
+            )
+
+            // clear translations that are absent from the GET
+            FrontRepoSingloton.Translations.forEach(
+              translation => {
+                if (FrontRepoSingloton.Translations_batch.get(translation.ID) == undefined) {
+                  FrontRepoSingloton.Translations.delete(translation.ID)
+                }
+              }
+            )
+
+            // 
+            // Second Step: redeem pointers between instances (thanks to maps in the First Step)
+            // insertion point sub template 
+
+            // hand over control flow to observer
+            observer.next(FrontRepoSingloton)
+          }
+        )
+      }
+    )
+  }
 }
 
 // insertion point for get unique ID per struct 
@@ -346,4 +477,7 @@ export function getCountrySpecUniqueID(id: number): number {
 }
 export function getCountryWithBodiesUniqueID(id: number): number {
   return 37 * id
+}
+export function getTranslationUniqueID(id: number): number {
+  return 41 * id
 }

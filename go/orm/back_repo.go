@@ -23,6 +23,8 @@ type BackRepoStruct struct {
 
 	BackRepoCountryWithBodies BackRepoCountryWithBodiesStruct
 
+	BackRepoTranslation BackRepoTranslationStruct
+
 	CommitNb uint // this ng is updated at the BackRepo level but also at the BackRepo<GongStruct> level
 
 	PushFromFrontNb uint // records increments from push from front
@@ -54,6 +56,7 @@ func (backRepo *BackRepoStruct) init(db *gorm.DB) {
 	// insertion point for per struct back repo declarations
 	backRepo.BackRepoCountrySpec.Init(db)
 	backRepo.BackRepoCountryWithBodies.Init(db)
+	backRepo.BackRepoTranslation.Init(db)
 
 	models.Stage.BackRepo = backRepo
 }
@@ -63,10 +66,12 @@ func (backRepo *BackRepoStruct) Commit(stage *models.StageStruct) {
 	// insertion point for per struct back repo phase one commit
 	backRepo.BackRepoCountrySpec.CommitPhaseOne(stage)
 	backRepo.BackRepoCountryWithBodies.CommitPhaseOne(stage)
+	backRepo.BackRepoTranslation.CommitPhaseOne(stage)
 
 	// insertion point for per struct back repo phase two commit
 	backRepo.BackRepoCountrySpec.CommitPhaseTwo(backRepo)
 	backRepo.BackRepoCountryWithBodies.CommitPhaseTwo(backRepo)
+	backRepo.BackRepoTranslation.CommitPhaseTwo(backRepo)
 
 	backRepo.IncrementCommitNb()
 }
@@ -76,10 +81,12 @@ func (backRepo *BackRepoStruct) Checkout(stage *models.StageStruct) {
 	// insertion point for per struct back repo phase one commit
 	backRepo.BackRepoCountrySpec.CheckoutPhaseOne()
 	backRepo.BackRepoCountryWithBodies.CheckoutPhaseOne()
+	backRepo.BackRepoTranslation.CheckoutPhaseOne()
 
 	// insertion point for per struct back repo phase two commit
 	backRepo.BackRepoCountrySpec.CheckoutPhaseTwo(backRepo)
 	backRepo.BackRepoCountryWithBodies.CheckoutPhaseTwo(backRepo)
+	backRepo.BackRepoTranslation.CheckoutPhaseTwo(backRepo)
 }
 
 var BackRepo BackRepoStruct
@@ -99,6 +106,7 @@ func (backRepo *BackRepoStruct) Backup(stage *models.StageStruct, dirPath string
 	// insertion point for per struct backup
 	backRepo.BackRepoCountrySpec.Backup(dirPath)
 	backRepo.BackRepoCountryWithBodies.Backup(dirPath)
+	backRepo.BackRepoTranslation.Backup(dirPath)
 }
 
 // Backup in XL the BackRepoStruct
@@ -111,6 +119,7 @@ func (backRepo *BackRepoStruct) BackupXL(stage *models.StageStruct, dirPath stri
 	// insertion point for per struct backup
 	backRepo.BackRepoCountrySpec.BackupXL(file)
 	backRepo.BackRepoCountryWithBodies.BackupXL(file)
+	backRepo.BackRepoTranslation.BackupXL(file)
 
 	var b bytes.Buffer
 	writer := bufio.NewWriter(&b)
@@ -137,6 +146,7 @@ func (backRepo *BackRepoStruct) Restore(stage *models.StageStruct, dirPath strin
 	// insertion point for per struct backup
 	backRepo.BackRepoCountrySpec.RestorePhaseOne(dirPath)
 	backRepo.BackRepoCountryWithBodies.RestorePhaseOne(dirPath)
+	backRepo.BackRepoTranslation.RestorePhaseOne(dirPath)
 
 	//
 	// restauration second phase (reindex pointers with the new ID)
@@ -145,6 +155,7 @@ func (backRepo *BackRepoStruct) Restore(stage *models.StageStruct, dirPath strin
 	// insertion point for per struct backup
 	backRepo.BackRepoCountrySpec.RestorePhaseTwo()
 	backRepo.BackRepoCountryWithBodies.RestorePhaseTwo()
+	backRepo.BackRepoTranslation.RestorePhaseTwo()
 
 	models.Stage.Checkout()
 }
@@ -173,6 +184,7 @@ func (backRepo *BackRepoStruct) RestoreXL(stage *models.StageStruct, dirPath str
 	// insertion point for per struct backup
 	backRepo.BackRepoCountrySpec.RestoreXLPhaseOne(file)
 	backRepo.BackRepoCountryWithBodies.RestoreXLPhaseOne(file)
+	backRepo.BackRepoTranslation.RestoreXLPhaseOne(file)
 
 	// commit the restored stage
 	models.Stage.Commit()

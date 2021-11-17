@@ -48,6 +48,11 @@ import { CountryWithBodiesSortingComponent } from './countrywithbodies-sorting/c
 import { CountryWithBodiesDetailComponent } from './countrywithbodies-detail/countrywithbodies-detail.component'
 import { CountryWithBodiesPresentationComponent } from './countrywithbodies-presentation/countrywithbodies-presentation.component'
 
+import { TranslationsTableComponent } from './translations-table/translations-table.component'
+import { TranslationSortingComponent } from './translation-sorting/translation-sorting.component'
+import { TranslationDetailComponent } from './translation-detail/translation-detail.component'
+import { TranslationPresentationComponent } from './translation-presentation/translation-presentation.component'
+
 
 @NgModule({
 	declarations: [
@@ -61,6 +66,11 @@ import { CountryWithBodiesPresentationComponent } from './countrywithbodies-pres
 		CountryWithBodiesSortingComponent,
 		CountryWithBodiesDetailComponent,
 		CountryWithBodiesPresentationComponent,
+
+		TranslationsTableComponent,
+		TranslationSortingComponent,
+		TranslationDetailComponent,
+		TranslationPresentationComponent,
 
 
 		SplitterComponent,
@@ -110,6 +120,11 @@ import { CountryWithBodiesPresentationComponent } from './countrywithbodies-pres
 		CountryWithBodiesSortingComponent,
 		CountryWithBodiesDetailComponent,
 		CountryWithBodiesPresentationComponent,
+
+		TranslationsTableComponent,
+		TranslationSortingComponent,
+		TranslationDetailComponent,
+		TranslationPresentationComponent,
 
 
 		SplitterComponent,

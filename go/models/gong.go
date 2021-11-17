@@ -18,6 +18,9 @@ type StageStruct struct { // insertion point for definition of arrays registerin
 	CountryWithBodiess           map[*CountryWithBodies]struct{}
 	CountryWithBodiess_mapString map[string]*CountryWithBodies
 
+	Translations           map[*Translation]struct{}
+	Translations_mapString map[string]*Translation
+
 	AllModelsStructCreateCallback AllModelsStructCreateInterface
 
 	AllModelsStructDeleteCallback AllModelsStructDeleteInterface
@@ -44,6 +47,8 @@ type BackRepoInterface interface {
 	CheckoutCountrySpec(countryspec *CountrySpec)
 	CommitCountryWithBodies(countrywithbodies *CountryWithBodies)
 	CheckoutCountryWithBodies(countrywithbodies *CountryWithBodies)
+	CommitTranslation(translation *Translation)
+	CheckoutTranslation(translation *Translation)
 	GetLastCommitNb() uint
 	GetLastPushFromFrontNb() uint
 }
@@ -55,6 +60,9 @@ var Stage StageStruct = StageStruct{ // insertion point for array initiatialisat
 
 	CountryWithBodiess:           make(map[*CountryWithBodies]struct{}),
 	CountryWithBodiess_mapString: make(map[string]*CountryWithBodies),
+
+	Translations:           make(map[*Translation]struct{}),
+	Translations_mapString: make(map[string]*Translation),
 
 	// end of insertion point
 }
@@ -304,15 +312,119 @@ func DeleteORMCountryWithBodies(countrywithbodies *CountryWithBodies) {
 	}
 }
 
+func (stage *StageStruct) getTranslationOrderedStructWithNameField() []*Translation {
+	// have alphabetical order generation
+	translationOrdered := []*Translation{}
+	for translation := range stage.Translations {
+		translationOrdered = append(translationOrdered, translation)
+	}
+	sort.Slice(translationOrdered[:], func(i, j int) bool {
+		return translationOrdered[i].Name < translationOrdered[j].Name
+	})
+	return translationOrdered
+}
+
+// Stage puts translation to the model stage
+func (translation *Translation) Stage() *Translation {
+	Stage.Translations[translation] = __member
+	Stage.Translations_mapString[translation.Name] = translation
+
+	return translation
+}
+
+// Unstage removes translation off the model stage
+func (translation *Translation) Unstage() *Translation {
+	delete(Stage.Translations, translation)
+	delete(Stage.Translations_mapString, translation.Name)
+	return translation
+}
+
+// commit translation to the back repo (if it is already staged)
+func (translation *Translation) Commit() *Translation {
+	if _, ok := Stage.Translations[translation]; ok {
+		if Stage.BackRepo != nil {
+			Stage.BackRepo.CommitTranslation(translation)
+		}
+	}
+	return translation
+}
+
+// Checkout translation to the back repo (if it is already staged)
+func (translation *Translation) Checkout() *Translation {
+	if _, ok := Stage.Translations[translation]; ok {
+		if Stage.BackRepo != nil {
+			Stage.BackRepo.CheckoutTranslation(translation)
+		}
+	}
+	return translation
+}
+
+//
+// Legacy, to be deleted
+//
+
+// StageCopy appends a copy of translation to the model stage
+func (translation *Translation) StageCopy() *Translation {
+	_translation := new(Translation)
+	*_translation = *translation
+	_translation.Stage()
+	return _translation
+}
+
+// StageAndCommit appends translation to the model stage and commit to the orm repo
+func (translation *Translation) StageAndCommit() *Translation {
+	translation.Stage()
+	if Stage.AllModelsStructCreateCallback != nil {
+		Stage.AllModelsStructCreateCallback.CreateORMTranslation(translation)
+	}
+	return translation
+}
+
+// DeleteStageAndCommit appends translation to the model stage and commit to the orm repo
+func (translation *Translation) DeleteStageAndCommit() *Translation {
+	translation.Unstage()
+	DeleteORMTranslation(translation)
+	return translation
+}
+
+// StageCopyAndCommit appends a copy of translation to the model stage and commit to the orm repo
+func (translation *Translation) StageCopyAndCommit() *Translation {
+	_translation := new(Translation)
+	*_translation = *translation
+	_translation.Stage()
+	if Stage.AllModelsStructCreateCallback != nil {
+		Stage.AllModelsStructCreateCallback.CreateORMTranslation(translation)
+	}
+	return _translation
+}
+
+// CreateORMTranslation enables dynamic staging of a Translation instance
+func CreateORMTranslation(translation *Translation) {
+	translation.Stage()
+	if Stage.AllModelsStructCreateCallback != nil {
+		Stage.AllModelsStructCreateCallback.CreateORMTranslation(translation)
+	}
+}
+
+// DeleteORMTranslation enables dynamic staging of a Translation instance
+func DeleteORMTranslation(translation *Translation) {
+	translation.Unstage()
+	if Stage.AllModelsStructDeleteCallback != nil {
+		Stage.AllModelsStructDeleteCallback.DeleteORMTranslation(translation)
+	}
+}
+
 // swagger:ignore
 type AllModelsStructCreateInterface interface { // insertion point for Callbacks on creation
 	CreateORMCountrySpec(CountrySpec *CountrySpec)
 	CreateORMCountryWithBodies(CountryWithBodies *CountryWithBodies)
+	CreateORMTranslation(Translation *Translation)
 }
 
 type AllModelsStructDeleteInterface interface { // insertion point for Callbacks on deletion
 	DeleteORMCountrySpec(CountrySpec *CountrySpec)
 	DeleteORMCountryWithBodies(CountryWithBodies *CountryWithBodies)
+	DeleteORMTranslation(Translation *Translation)
 }
 
 func (stage *StageStruct) Reset() { // insertion point for array reset
@@ -322,6 +434,9 @@ func (stage *StageStruct) Reset() { // insertion point for array reset
 	stage.CountryWithBodiess = make(map[*CountryWithBodies]struct{})
 	stage.CountryWithBodiess_mapString = make(map[string]*CountryWithBodies)
 
+	stage.Translations = make(map[*Translation]struct{})
+	stage.Translations_mapString = make(map[string]*Translation)
+
 }
 
 func (stage *StageStruct) Nil() { // insertion point for array nil
@@ -330,5 +445,8 @@ func (stage *StageStruct) Nil() { // insertion point for array nil
 
 	stage.CountryWithBodiess = nil
 	stage.CountryWithBodiess_mapString = nil
+
+	stage.Translations = nil
+	stage.Translations_mapString = nil
 
 }
