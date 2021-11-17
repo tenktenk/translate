@@ -4,6 +4,8 @@ import (
 	"github.com/tenktenk/translate/go/grump"
 )
 
+// some stiff
+
 // Singloton pointing to the current translation
 // the singloton can be autocally initiated if it is nil
 var TranslationtSingloton Translation
