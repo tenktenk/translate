@@ -1,6 +1,8 @@
 package models
 
-import "github.com/tenktenk/translate/go/grump"
+import (
+	"github.com/tenktenk/translate/go/grump"
+)
 
 // Singloton pointing to the current translation
 // the singloton can be autocally initiated if it is nil
@@ -20,13 +22,13 @@ type CountrySpec struct {
 var countrySpecs = []*CountrySpec{
 	(&CountrySpec{Name: "fra", NbBodies: 934136, Step: 8725}).Stage(),
 	(&CountrySpec{Name: "hti", NbBodies: 190948, Step: 1334}).Stage(),
-	(&CountrySpec{Name: "usa", NbBodies: 1422837, Step: 2735}).Stage(),
+	// (&CountrySpec{Name: "usa", NbBodies: 1422837, Step: 2735}).Stage(),
 	// CountrySpec{Name: "chn", NbBodies: 771973, Step: 2531},
 	// CountrySpec{Name: "rus", NbBodies: 509497, Step: 3386},
 }
 
 // Singloton pattern to init the current translation
-func GetTranslateCurrent() *Translation {
+func GetOrInitTranslateCurrent(path string) *Translation {
 
 	// check if the current translation is void.
 	if mapOfCountryWithBodies == nil {
@@ -35,7 +37,7 @@ func GetTranslateCurrent() *Translation {
 
 		// stage the country
 		for _, countrySpec := range countrySpecs {
-			country := (&CountryWithBodies{
+			countryWithBodies := (&CountryWithBodies{
 				Country: grump.Country{
 					Name: countrySpec.Name,
 				},
@@ -43,9 +45,10 @@ func GetTranslateCurrent() *Translation {
 				Step:     countrySpec.Step,
 			}).Stage()
 
-			country.Init()
+			countryWithBodies.Stage()
+			countryWithBodies.Init(path)
 
-			mapOfCountryWithBodies[country.Name] = country
+			mapOfCountryWithBodies[countryWithBodies.Name] = countryWithBodies
 		}
 
 		translateCurrent.sourceCountryWithBodies = mapOfCountryWithBodies["fra"]

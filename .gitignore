@@ -20,3 +20,4 @@ go/cmd/translate/test.db
 gini_out.csv
 status_out.csv
 conf*.gif
+go/cmd/translate/__debug_bin

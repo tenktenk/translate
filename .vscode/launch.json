@@ -30,6 +30,14 @@
             "webRoot": "${workspaceFolder}/ng"
         },
         {
+            "name": "go translate server",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/go/cmd/translate",
+            "args": []
+        },
+        {
             "name": "go simulation server",
             "type": "go",
             "request": "launch",

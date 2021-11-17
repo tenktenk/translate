@@ -59,6 +59,8 @@ func (country *Country) Serialize() {
 // Unserialize inits struct from a coord file
 func (country *Country) Unserialize() {
 
+	log.Println("Unserialize ", country.Name)
+
 	filename := fmt.Sprintf("conf-%s.coord", country.Name)
 	file, err := os.Open(filename)
 	if err != nil {

@@ -8,6 +8,7 @@ import (
 	"log"
 	"math"
 	"os"
+	"path/filepath"
 
 	barneshut "github.com/tenktenk/translate/go/barnes-hut"
 	"github.com/tenktenk/translate/go/grump"
@@ -48,7 +49,7 @@ var nbVillagePerAxe int = 100
 var numberOfVillagePerAxe float64 = 100.0
 
 // init variables
-func (countryWithBodies *CountryWithBodies) Init() {
+func (countryWithBodies *CountryWithBodies) Init(path string) {
 
 	// unserialize from conf-<country trigram>.coord
 	// store step because the unseralize set it to a wrong value
@@ -59,8 +60,8 @@ func (countryWithBodies *CountryWithBodies) Init() {
 	Info.Printf("Init after Unserialize name %s", countryWithBodies.Name)
 	Info.Printf("Init after Unserialize step %d", countryWithBodies.Step)
 
-	countryWithBodies.LoadConfig(true)  // load config at the end  of the simulation
-	countryWithBodies.LoadConfig(false) // load config at the start of the simulation
+	countryWithBodies.LoadConfig(path, true)  // load config at the end  of the simulation
+	countryWithBodies.LoadConfig(path, false) // load config at the start of the simulation
 
 	countryWithBodies.VilCoordinates = make([][]int, countryWithBodies.NbBodies)
 	for idx := range countryWithBodies.VilCoordinates {
@@ -76,7 +77,7 @@ var bodsFileReaderErr error
 
 // load configuration from filename into country
 // check that it matches the
-func (countryWithBodies *CountryWithBodies) LoadConfig(isOriginal bool) bool {
+func (countryWithBodies *CountryWithBodies) LoadConfig(path string, isOriginal bool) bool {
 
 	bodsFileReaderErr = nil
 
@@ -92,6 +93,8 @@ func (countryWithBodies *CountryWithBodies) LoadConfig(isOriginal bool) bool {
 
 	filename := fmt.Sprintf(barneshut.CountryBodiesNamePattern, countryWithBodies.Name, countryWithBodies.NbBodies, step)
 	Info.Printf("LoadConfig (orig = true/final = false) %t file %s for country %s at step %d", isOriginal, filename, countryWithBodies.Name, step)
+
+	filename = filepath.Join(path, filename)
 
 	// check if file is missing.
 	if _, err := os.Stat(filename); os.IsNotExist(err) {

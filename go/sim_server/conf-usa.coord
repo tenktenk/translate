@@ -2,6 +2,6 @@
 	"Name": "usa",
 	"NCols": 7080,
 	"NRows": 3120,
-	"XllCorner": -125,
-	"YllCorner": 24
+	"LngLowerLeftCorner": -125,
+	"LatLowerLeftCorner": 24
 }
