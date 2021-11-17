@@ -93,7 +93,7 @@ func AddBodiesOfParselyPopulatedCells(
 
 				// get lat/lng
 				lat := country.Row2Lat(row)
-				lng := float64(country.XllCorner) + (float64(col) * colLngWidth)
+				lng := float64(country.LngLowerLeftCorner) + (float64(col) * colLngWidth)
 				Trace.Printf("%f %f", lat, lng)
 
 				// compute relative coordinate of the cell

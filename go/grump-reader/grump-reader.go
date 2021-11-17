@@ -114,10 +114,10 @@ func main() {
 	fmt.Sscanf(scanner.Text(), "%d", &country.NRows)
 	scanner.Scan()
 	scanner.Scan()
-	fmt.Sscanf(scanner.Text(), "%f", &country.XllCorner)
+	fmt.Sscanf(scanner.Text(), "%f", &country.LngLowerLeftCorner)
 	scanner.Scan()
 	scanner.Scan()
-	fmt.Sscanf(scanner.Text(), "%f", &country.YllCorner)
+	fmt.Sscanf(scanner.Text(), "%f", &country.LatLowerLeftCorner)
 
 	country.Serialize()
 	grump.Info.Println("country struct content is ", country)
@@ -247,7 +247,7 @@ func main() {
 		// allocate for col
 		parselyPopulatedCellCoords[row] = make([]bool, country.NCols)
 		for col := 0; col < country.NCols; col++ {
-			lng := float64(country.XllCorner) + (float64(col) * colLngWidth)
+			lng := float64(country.LngLowerLeftCorner) + (float64(col) * colLngWidth)
 
 			// compute relative coordinate of the cell
 			relX, relY := country.LatLng2XY(lat, lng)

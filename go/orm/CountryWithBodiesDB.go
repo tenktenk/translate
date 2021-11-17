@@ -67,11 +67,17 @@ type CountryWithBodiesDB struct {
 	// Declation for basic field countrywithbodiesDB.NRows {{BasicKind}} (to be completed)
 	NRows_Data sql.NullInt64
 
-	// Declation for basic field countrywithbodiesDB.XllCorner {{BasicKind}} (to be completed)
-	XllCorner_Data sql.NullFloat64
+	// Declation for basic field countrywithbodiesDB.LngLowerLeftCorner {{BasicKind}} (to be completed)
+	LngLowerLeftCorner_Data sql.NullFloat64
 
-	// Declation for basic field countrywithbodiesDB.YllCorner {{BasicKind}} (to be completed)
-	YllCorner_Data sql.NullFloat64
+	// Declation for basic field countrywithbodiesDB.LatLowerLeftCorner {{BasicKind}} (to be completed)
+	LatLowerLeftCorner_Data sql.NullFloat64
+
+	// Declation for basic field countrywithbodiesDB.LngUpperRightCorner {{BasicKind}} (to be completed)
+	LngUpperRightCorner_Data sql.NullFloat64
+
+	// Declation for basic field countrywithbodiesDB.LatUpperRightCorner {{BasicKind}} (to be completed)
+	LatUpperRightCorner_Data sql.NullFloat64
 
 	// Declation for basic field countrywithbodiesDB.NbBodies {{BasicKind}} (to be completed)
 	NbBodies_Data sql.NullInt64
@@ -105,13 +111,17 @@ type CountryWithBodiesWOP struct {
 
 	NRows int `xlsx:"3"`
 
-	XllCorner float64 `xlsx:"4"`
+	LngLowerLeftCorner float64 `xlsx:"4"`
 
-	YllCorner float64 `xlsx:"5"`
+	LatLowerLeftCorner float64 `xlsx:"5"`
 
-	NbBodies int `xlsx:"6"`
+	LngUpperRightCorner float64 `xlsx:"6"`
 
-	Step int `xlsx:"7"`
+	LatUpperRightCorner float64 `xlsx:"7"`
+
+	NbBodies int `xlsx:"8"`
+
+	Step int `xlsx:"9"`
 	// insertion for WOP pointer fields
 }
 
@@ -121,8 +131,10 @@ var CountryWithBodies_Fields = []string{
 	"Name",
 	"NCols",
 	"NRows",
-	"XllCorner",
-	"YllCorner",
+	"LngLowerLeftCorner",
+	"LatLowerLeftCorner",
+	"LngUpperRightCorner",
+	"LatUpperRightCorner",
 	"NbBodies",
 	"Step",
 }
@@ -415,11 +427,17 @@ func (countrywithbodiesDB *CountryWithBodiesDB) CopyBasicFieldsFromCountryWithBo
 	countrywithbodiesDB.NRows_Data.Int64 = int64(countrywithbodies.NRows)
 	countrywithbodiesDB.NRows_Data.Valid = true
 
-	countrywithbodiesDB.XllCorner_Data.Float64 = countrywithbodies.XllCorner
-	countrywithbodiesDB.XllCorner_Data.Valid = true
+	countrywithbodiesDB.LngLowerLeftCorner_Data.Float64 = countrywithbodies.LngLowerLeftCorner
+	countrywithbodiesDB.LngLowerLeftCorner_Data.Valid = true
 
-	countrywithbodiesDB.YllCorner_Data.Float64 = countrywithbodies.YllCorner
-	countrywithbodiesDB.YllCorner_Data.Valid = true
+	countrywithbodiesDB.LatLowerLeftCorner_Data.Float64 = countrywithbodies.LatLowerLeftCorner
+	countrywithbodiesDB.LatLowerLeftCorner_Data.Valid = true
+
+	countrywithbodiesDB.LngUpperRightCorner_Data.Float64 = countrywithbodies.LngUpperRightCorner
+	countrywithbodiesDB.LngUpperRightCorner_Data.Valid = true
+
+	countrywithbodiesDB.LatUpperRightCorner_Data.Float64 = countrywithbodies.LatUpperRightCorner
+	countrywithbodiesDB.LatUpperRightCorner_Data.Valid = true
 
 	countrywithbodiesDB.NbBodies_Data.Int64 = int64(countrywithbodies.NbBodies)
 	countrywithbodiesDB.NbBodies_Data.Valid = true
@@ -441,11 +459,17 @@ func (countrywithbodiesDB *CountryWithBodiesDB) CopyBasicFieldsFromCountryWithBo
 	countrywithbodiesDB.NRows_Data.Int64 = int64(countrywithbodies.NRows)
 	countrywithbodiesDB.NRows_Data.Valid = true
 
-	countrywithbodiesDB.XllCorner_Data.Float64 = countrywithbodies.XllCorner
-	countrywithbodiesDB.XllCorner_Data.Valid = true
+	countrywithbodiesDB.LngLowerLeftCorner_Data.Float64 = countrywithbodies.LngLowerLeftCorner
+	countrywithbodiesDB.LngLowerLeftCorner_Data.Valid = true
 
-	countrywithbodiesDB.YllCorner_Data.Float64 = countrywithbodies.YllCorner
-	countrywithbodiesDB.YllCorner_Data.Valid = true
+	countrywithbodiesDB.LatLowerLeftCorner_Data.Float64 = countrywithbodies.LatLowerLeftCorner
+	countrywithbodiesDB.LatLowerLeftCorner_Data.Valid = true
+
+	countrywithbodiesDB.LngUpperRightCorner_Data.Float64 = countrywithbodies.LngUpperRightCorner
+	countrywithbodiesDB.LngUpperRightCorner_Data.Valid = true
+
+	countrywithbodiesDB.LatUpperRightCorner_Data.Float64 = countrywithbodies.LatUpperRightCorner
+	countrywithbodiesDB.LatUpperRightCorner_Data.Valid = true
 
 	countrywithbodiesDB.NbBodies_Data.Int64 = int64(countrywithbodies.NbBodies)
 	countrywithbodiesDB.NbBodies_Data.Valid = true
@@ -460,8 +484,10 @@ func (countrywithbodiesDB *CountryWithBodiesDB) CopyBasicFieldsToCountryWithBodi
 	countrywithbodies.Name = countrywithbodiesDB.Name_Data.String
 	countrywithbodies.NCols = int(countrywithbodiesDB.NCols_Data.Int64)
 	countrywithbodies.NRows = int(countrywithbodiesDB.NRows_Data.Int64)
-	countrywithbodies.XllCorner = countrywithbodiesDB.XllCorner_Data.Float64
-	countrywithbodies.YllCorner = countrywithbodiesDB.YllCorner_Data.Float64
+	countrywithbodies.LngLowerLeftCorner = countrywithbodiesDB.LngLowerLeftCorner_Data.Float64
+	countrywithbodies.LatLowerLeftCorner = countrywithbodiesDB.LatLowerLeftCorner_Data.Float64
+	countrywithbodies.LngUpperRightCorner = countrywithbodiesDB.LngUpperRightCorner_Data.Float64
+	countrywithbodies.LatUpperRightCorner = countrywithbodiesDB.LatUpperRightCorner_Data.Float64
 	countrywithbodies.NbBodies = int(countrywithbodiesDB.NbBodies_Data.Int64)
 	countrywithbodies.Step = int(countrywithbodiesDB.Step_Data.Int64)
 }
@@ -473,8 +499,10 @@ func (countrywithbodiesDB *CountryWithBodiesDB) CopyBasicFieldsToCountryWithBodi
 	countrywithbodies.Name = countrywithbodiesDB.Name_Data.String
 	countrywithbodies.NCols = int(countrywithbodiesDB.NCols_Data.Int64)
 	countrywithbodies.NRows = int(countrywithbodiesDB.NRows_Data.Int64)
-	countrywithbodies.XllCorner = countrywithbodiesDB.XllCorner_Data.Float64
-	countrywithbodies.YllCorner = countrywithbodiesDB.YllCorner_Data.Float64
+	countrywithbodies.LngLowerLeftCorner = countrywithbodiesDB.LngLowerLeftCorner_Data.Float64
+	countrywithbodies.LatLowerLeftCorner = countrywithbodiesDB.LatLowerLeftCorner_Data.Float64
+	countrywithbodies.LngUpperRightCorner = countrywithbodiesDB.LngUpperRightCorner_Data.Float64
+	countrywithbodies.LatUpperRightCorner = countrywithbodiesDB.LatUpperRightCorner_Data.Float64
 	countrywithbodies.NbBodies = int(countrywithbodiesDB.NbBodies_Data.Int64)
 	countrywithbodies.Step = int(countrywithbodiesDB.Step_Data.Int64)
 }
