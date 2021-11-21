@@ -2,6 +2,6 @@
 	"Name": "hti",
 	"NCols": 480,
 	"NRows": 480,
-	"LngLowerLeftCorner": -75,
-	"LatLowerLeftCorner": 17
+	"XllCorner": -75,
+	"YllCorner": 17
 }

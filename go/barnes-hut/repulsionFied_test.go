@@ -8,7 +8,7 @@ import (
 func OldTestRepulsionFieldInit(t *testing.T) {
 
 	r := NewRun()
-	r.LoadConfig("../../../countries_input", "conf-fra-00000.bods")
+	r.LoadConfig("", "conf-fra-00000.bods")
 
 	// get pointer on quadtree
 	q := &(r.q)

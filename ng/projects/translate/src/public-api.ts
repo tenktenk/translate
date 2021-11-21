@@ -28,11 +28,4 @@ export * from './lib/countrywithbodiess-table/countrywithbodiess-table.component
 export * from './lib/countrywithbodies-db'
 export * from './lib/countrywithbodies.service'
 
-export * from './lib/translation-detail/translation-detail.component'
-export * from './lib/translation-presentation/translation-presentation.component'
-export * from './lib/translation-sorting/translation-sorting.component'
-export * from './lib/translations-table/translations-table.component'
-export * from './lib/translation-db'
-export * from './lib/translation.service'
-
 

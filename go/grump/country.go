@@ -24,21 +24,17 @@ type Country struct {
 
 	// A country is defined by an encompassing square
 
-	// LngLowerLeftCorner is longitude of the lower left corner, in degress
-	LngLowerLeftCorner float64
+	// XllCorner is longitude of the lower left corner, in degress
+	XllCorner float64
 
 	// XYlCorner is latitude of the lower left corner, in degress
-	LatLowerLeftCorner float64
-
-	LngUpperRightCorner float64
-
-	LatUpperRightCorner float64
+	YllCorner float64
 }
 
 // Row2Lat converts from row index to lat
 func (country *Country) Row2Lat(row int) (lat float64) {
 	// lat := float64( country.YllCorner) + (float64( country.NRows - row)*rowLatWidth)
-	lat = float64(country.LatLowerLeftCorner) + float64(row)*GrumpSpacing
+	lat = float64(country.YllCorner) + float64(row)*GrumpSpacing
 	return lat
 }
 
@@ -59,8 +55,6 @@ func (country *Country) Serialize() {
 // Unserialize inits struct from a coord file
 func (country *Country) Unserialize() {
 
-	log.Println("Unserialize ", country.Name)
-
 	filename := fmt.Sprintf("conf-%s.coord", country.Name)
 	file, err := os.Open(filename)
 	if err != nil {
@@ -76,13 +70,10 @@ func (country *Country) Unserialize() {
 	Info.Printf("(Grump) Unserialize country %s", country.Name)
 
 	Info.Printf("(Grump) Init Country orig lat %f lng %f size lat %f lng %f ",
-		float64(country.LatLowerLeftCorner),
-		float64(country.LngLowerLeftCorner),
+		float64(country.YllCorner),
+		float64(country.XllCorner),
 		float64(country.NRows)*GrumpSpacing,
 		float64(country.NCols)*GrumpSpacing)
-
-	country.LatUpperRightCorner = country.LatLowerLeftCorner + float64(country.NRows)*GrumpSpacing
-	country.LngUpperRightCorner = country.LngLowerLeftCorner + float64(country.NCols)*GrumpSpacing
 
 	file.Close()
 }
@@ -91,8 +82,8 @@ func (country *Country) Unserialize() {
 func (country *Country) LatLng2XY(lat, lng float64) (x, y float64) {
 
 	// compute relative coordinates within the square
-	x = (lng - float64(country.LngLowerLeftCorner)) / (float64(country.NCols) * GrumpSpacing)
-	y = (lat - float64(country.LatLowerLeftCorner)) / (float64(country.NRows) * GrumpSpacing) // y is 0 at northest point and 1.0 at southest point
+	x = (lng - float64(country.XllCorner)) / (float64(country.NCols) * GrumpSpacing)
+	y = (lat - float64(country.YllCorner)) / (float64(country.NRows) * GrumpSpacing) // y is 0 at northest point and 1.0 at southest point
 
 	return x, y
 }
@@ -100,8 +91,8 @@ func (country *Country) LatLng2XY(lat, lng float64) (x, y float64) {
 // XY2LatLng gives from lat/lng, the relative coordinate within the country
 func (country *Country) XY2LatLng(x, y float64) (lat, lng float64) {
 
-	lat = float64(country.LatLowerLeftCorner) + (y * float64(country.NRows) * GrumpSpacing)
-	lng = float64(country.LngLowerLeftCorner) + (x * float64(country.NCols) * GrumpSpacing)
+	lat = float64(country.YllCorner) + (y * float64(country.NRows) * GrumpSpacing)
+	lng = float64(country.XllCorner) + (x * float64(country.NCols) * GrumpSpacing)
 
 	return lat, lng
 }

@@ -14,7 +14,6 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { TranslationDB } from './translation-db';
 
 // insertion point for imports
-import { CountryWithBodiesDB } from './countrywithbodies-db'
 
 @Injectable({
   providedIn: 'root'
@@ -71,8 +70,6 @@ export class TranslationService {
   postTranslation(translationdb: TranslationDB): Observable<TranslationDB> {
 
     // insertion point for reset of pointers and reverse pointers (to avoid circular JSON)
-    translationdb.SourceCountryWithBodies = new CountryWithBodiesDB
-    translationdb.TargetCountryWithBodies = new CountryWithBodiesDB
 
     return this.http.post<TranslationDB>(this.translationsUrl, translationdb, this.httpOptions).pipe(
       tap(_ => {
@@ -100,8 +97,6 @@ export class TranslationService {
     const url = `${this.translationsUrl}/${id}`;
 
     // insertion point for reset of pointers and reverse pointers (to avoid circular JSON)
-    translationdb.SourceCountryWithBodies = new CountryWithBodiesDB
-    translationdb.TargetCountryWithBodies = new CountryWithBodiesDB
 
     return this.http.put<TranslationDB>(url, translationdb, this.httpOptions).pipe(
       tap(_ => {

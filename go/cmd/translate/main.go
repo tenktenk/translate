@@ -13,10 +13,10 @@ import (
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 
+	"github.com/tenktenk/translate/go/controllers"
+	"github.com/tenktenk/translate/go/orm"
+
 	translate "github.com/tenktenk/translate"
-	translate_controllers "github.com/tenktenk/translate/go/controllers"
-	translate_models "github.com/tenktenk/translate/go/models"
-	translate_orm "github.com/tenktenk/translate/go/orm"
 )
 
 var (
@@ -42,7 +42,7 @@ func main() {
 	r.Use(cors.Default())
 
 	// setup GORM
-	db := translate_orm.SetupModels(*logDBFlag, ":memory:")
+	db := orm.SetupModels(*logDBFlag, ":memory:")
 	dbDB, err := db.DB()
 
 	// since the stack can be a multi threaded application. It is important to set up
@@ -52,18 +52,7 @@ func main() {
 	}
 	dbDB.SetMaxOpenConns(1)
 
-	translate_controllers.RegisterControllers(r)
-
-	// setup translation
-	// translate_models.Info.SetOutput(ioutil.Discard)
-
-	// load tenk translation
-	currentTranslation := translate_models.GetOrInitTranslateCurrent("../../../../countries_input")
-	_ = currentTranslation
-
-	translate_models.Stage.Commit()
-
-	log.Printf("Created translation")
+	controllers.RegisterControllers(r)
 
 	// provide the static route for the angular pages
 	r.Use(static.Serve("/", EmbedFolder(translate.NgDistNg, "ng/dist/ng")))

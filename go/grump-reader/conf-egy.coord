@@ -2,6 +2,6 @@
 	"Name": "egy",
 	"NCols": 1560,
 	"NRows": 1440,
-	"LngLowerLeftCorner": 24,
-	"LatLowerLeftCorner": 21
+	"XllCorner": 24,
+	"YllCorner": 21
 }

@@ -2,6 +2,6 @@
 	"Name": "chn",
 	"NCols": 7560,
 	"NRows": 4320,
-	"LngLowerLeftCorner": 73,
-	"LatLowerLeftCorner": 18
+	"XllCorner": 73,
+	"YllCorner": 18
 }

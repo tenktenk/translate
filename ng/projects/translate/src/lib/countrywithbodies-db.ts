@@ -12,10 +12,8 @@ export class CountryWithBodiesDB {
 	Name: string = ""
 	NCols: number = 0
 	NRows: number = 0
-	LngLowerLeftCorner: number = 0
-	LatLowerLeftCorner: number = 0
-	LngUpperRightCorner: number = 0
-	LatUpperRightCorner: number = 0
+	XllCorner: number = 0
+	YllCorner: number = 0
 	NbBodies: number = 0
 	Step: number = 0
 

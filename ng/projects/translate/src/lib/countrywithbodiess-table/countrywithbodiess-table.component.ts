@@ -75,17 +75,11 @@ export class CountryWithBodiessTableComponent implements OnInit {
         case 'NRows':
           return countrywithbodiesDB.NRows;
 
-        case 'LngLowerLeftCorner':
-          return countrywithbodiesDB.LngLowerLeftCorner;
+        case 'XllCorner':
+          return countrywithbodiesDB.XllCorner;
 
-        case 'LatLowerLeftCorner':
-          return countrywithbodiesDB.LatLowerLeftCorner;
-
-        case 'LngUpperRightCorner':
-          return countrywithbodiesDB.LngUpperRightCorner;
-
-        case 'LatUpperRightCorner':
-          return countrywithbodiesDB.LatUpperRightCorner;
+        case 'YllCorner':
+          return countrywithbodiesDB.YllCorner;
 
         case 'NbBodies':
           return countrywithbodiesDB.NbBodies;
@@ -110,10 +104,8 @@ export class CountryWithBodiessTableComponent implements OnInit {
       mergedContent += countrywithbodiesDB.Name.toLowerCase()
       mergedContent += countrywithbodiesDB.NCols.toString()
       mergedContent += countrywithbodiesDB.NRows.toString()
-      mergedContent += countrywithbodiesDB.LngLowerLeftCorner.toString()
-      mergedContent += countrywithbodiesDB.LatLowerLeftCorner.toString()
-      mergedContent += countrywithbodiesDB.LngUpperRightCorner.toString()
-      mergedContent += countrywithbodiesDB.LatUpperRightCorner.toString()
+      mergedContent += countrywithbodiesDB.XllCorner.toString()
+      mergedContent += countrywithbodiesDB.YllCorner.toString()
       mergedContent += countrywithbodiesDB.NbBodies.toString()
       mergedContent += countrywithbodiesDB.Step.toString()
 
@@ -169,10 +161,8 @@ export class CountryWithBodiessTableComponent implements OnInit {
         "Name",
         "NCols",
         "NRows",
-        "LngLowerLeftCorner",
-        "LatLowerLeftCorner",
-        "LngUpperRightCorner",
-        "LatUpperRightCorner",
+        "XllCorner",
+        "YllCorner",
         "NbBodies",
         "Step",
       ]
@@ -181,10 +171,8 @@ export class CountryWithBodiessTableComponent implements OnInit {
         "Name",
         "NCols",
         "NRows",
-        "LngLowerLeftCorner",
-        "LatLowerLeftCorner",
-        "LngUpperRightCorner",
-        "LatUpperRightCorner",
+        "XllCorner",
+        "YllCorner",
         "NbBodies",
         "Step",
       ]

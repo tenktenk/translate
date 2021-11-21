@@ -57,13 +57,6 @@ func RegisterControllers(r *gin.Engine) {
 		v1.PUT("/v1/countrywithbodiess/:id", UpdateCountryWithBodies)
 		v1.DELETE("/v1/countrywithbodiess/:id", DeleteCountryWithBodies)
 
-		v1.GET("/v1/translations", GetTranslations)
-		v1.GET("/v1/translations/:id", GetTranslation)
-		v1.POST("/v1/translations", PostTranslation)
-		v1.PATCH("/v1/translations/:id", UpdateTranslation)
-		v1.PUT("/v1/translations/:id", UpdateTranslation)
-		v1.DELETE("/v1/translations/:id", DeleteTranslation)
-
 		v1.GET("/commitnb", GetLastCommitNb)
 		v1.GET("/pushfromfrontnb", GetLastPushFromFrontNb)
 	}

@@ -2,6 +2,6 @@
 	"Name": "fra",
 	"NCols": 2040,
 	"NRows": 1440,
-	"LngLowerLeftCorner": -6,
-	"LatLowerLeftCorner": 40
+	"XllCorner": -6,
+	"YllCorner": 40
 }
