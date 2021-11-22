@@ -14,6 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/tenktenk/translate/go/controllers"
+	"github.com/tenktenk/translate/go/models"
 	"github.com/tenktenk/translate/go/orm"
 
 	translate "github.com/tenktenk/translate"
@@ -51,6 +52,16 @@ func main() {
 		panic("cannot access DB of db" + err.Error())
 	}
 	dbDB.SetMaxOpenConns(1)
+
+	// load france
+	france := new(models.CountryWithBodies).Stage()
+	franceSpecs := (&models.CountrySpec{Name: "fra", NbBodies: 934136, Step: 8725}).Stage()
+	france.Name = franceSpecs.Name
+	france.NbBodies = franceSpecs.NbBodies
+	france.Step = franceSpecs.Step
+	france.Init("../../../../countries_input")
+
+	models.Stage.Commit()
 
 	controllers.RegisterControllers(r)
 

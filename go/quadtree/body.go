@@ -1,8 +1,13 @@
 package quadtree
 
 import (
+	"archive/zip"
+	"encoding/json"
 	"fmt"
+	"io"
+	"log"
 	"math/rand"
+	"os"
 )
 
 type BodyXY struct {
@@ -57,4 +62,65 @@ func InitBodiesUniform(bodies *[]Body, nbBodies int) {
 		(*bodies)[idx].Y = rand.Float64()
 		(*bodies)[idx].M = rand.Float64()
 	}
+}
+
+type BodyArray []BodyXY
+type BodyArrayPtr struct {
+	*BodyArray
+}
+
+func (BodyArrayPtr *BodyArrayPtr) GetArray() *[]BodyXY {
+	return (*[]BodyXY)(BodyArrayPtr.BodyArray)
+}
+
+// Unmarshall look for file
+// if file is absent, look for file with a zip extension
+func (bodyArrayPtr *BodyArrayPtr) Unmarshall(path string) (err error) {
+
+	var bodsFileReader io.ReadCloser
+	var bodsFileReaderErr error
+
+	// check if file is missing.
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		Info.Printf("File %s is missing, trying to find the zip file", path)
+
+		zipFilename := path + ".zip"
+		Info.Printf("Checking if zip file %s is present", zipFilename)
+		if _, err := os.Stat(zipFilename); os.IsNotExist(err) {
+			log.Fatal(err)
+			return err
+		}
+
+		Info.Printf("Loading zip file %s", zipFilename)
+		reader, err := zip.OpenReader(zipFilename)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer reader.Close()
+		Info.Printf("Loading zip file %s done", zipFilename)
+
+		for _, file := range reader.File {
+
+			bodsFileReader, bodsFileReaderErr = file.Open()
+			Info.Printf("Open bods file %s in zip", file.Name)
+			if bodsFileReaderErr != nil {
+				log.Fatal(bodsFileReaderErr)
+				return bodsFileReaderErr
+			}
+			defer bodsFileReader.Close()
+		}
+	}
+
+	jsonParser := json.NewDecoder(bodsFileReader)
+
+	// (*bodyArray.BodyArray) =
+	targetArray := make([]BodyXY, 0)
+	bodyArrayPtr.BodyArray = (*BodyArray)(&targetArray)
+	if err := jsonParser.Decode(bodyArrayPtr.BodyArray); err != nil {
+		log.Fatal(fmt.Sprintf("parsing config file %s", err.Error()))
+		return err
+	}
+	Info.Printf("nb item parsed in file for orig %d\n", len(targetArray))
+
+	return
 }

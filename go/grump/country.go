@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 // GrumpSpacing is side length in degrees of the input data unit square
@@ -53,9 +54,12 @@ func (country *Country) Serialize() {
 }
 
 // Unserialize inits struct from a coord file
-func (country *Country) Unserialize() {
+func (country *Country) Unserialize(datastore string) {
 
 	filename := fmt.Sprintf("conf-%s.coord", country.Name)
+
+	filename = filepath.Join(datastore, filename)
+
 	file, err := os.Open(filename)
 	if err != nil {
 		log.Fatal(err)

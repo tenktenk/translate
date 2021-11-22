@@ -26,7 +26,7 @@ var countrySpecs = []*CountrySpec{
 }
 
 // Singloton pattern to init the current translation
-func GetTranslateCurrent() *Translation {
+func GetTranslateCurrent(datastore string) *Translation {
 
 	// check if the current translation is void.
 	if mapOfCountries == nil {
@@ -43,7 +43,7 @@ func GetTranslateCurrent() *Translation {
 				Step:     countrySpec.Step,
 			}).Stage()
 
-			country.Init()
+			country.Init(datastore)
 
 			mapOfCountries[country.Name] = country
 		}
