@@ -21,11 +21,11 @@ var r *barneshut.Run
 
 var (
 	sourceCountryPtr         = flag.String("sourceCountry", "fra", "iso 3166 sourceCountry code")
-	sourceCountryNbBodiesPtr = flag.String("sourceCountryNbBodies", "934136", "nb of bodies")
-	sourceCountryStepPtr     = flag.String("sourceCountryStep", "0", "simulation step for the spread bodies for source country")
-	cutoffPtr                = flag.String("cutoff", "2", "cutoff code distance")
-	shutdownCriteriaPtr      = flag.String("shutdownCriteria", "0.00001", "If energy decreases ratio is below this threshold during a simulation step, simulation shutdowns")
-	portPtr                  = flag.String("port", "8000", "listening port")
+	sourceCountryNbBodiesPtr = flag.Int("sourceCountryNbBodies", 934136, "nb of bodies")
+	sourceCountryStepPtr     = flag.Int("sourceCountryStep", 0, "simulation step for the spread bodies for source country")
+	cutoffPtr                = flag.Float64("cutoff", 2.0, "cutoff code distance")
+	shutdownCriteriaPtr      = flag.Float64("shutdownCriteria", 0.00001, "If energy decreases ratio is below this threshold during a simulation step, simulation shutdowns")
+	portPtr                  = flag.Int("port", 8000, "listening port")
 	startPtr                 = flag.Bool("start", false, "if true, start simulation run immediatly")
 	captureGifStep           = flag.Int("stepsBetweenGifs", 40, "steps between gif")
 )
@@ -41,45 +41,14 @@ func main() {
 	// init sourceCountry from flags
 	var sourceCountry models.CountryWithBodies
 	sourceCountry.Name = *sourceCountryPtr
-	{
-		_, errScan := fmt.Sscanf(*sourceCountryNbBodiesPtr, "%d", &sourceCountry.NbBodies)
-		if errScan != nil {
-			log.Fatal(errScan)
-			return
-		}
-	}
-	{
-		_, errScan := fmt.Sscanf(*sourceCountryStepPtr, "%d", &sourceCountry.Step)
-		if errScan != nil {
-			log.Fatal(errScan)
-			return
-		}
-	}
-	{
-		_, errScan := fmt.Sscanf(*cutoffPtr, "%f", &barneshut.CutoffDistance)
-		if errScan != nil {
-			log.Fatal(errScan)
-			return
-		}
-	}
+	sourceCountry.NbBodies = *sourceCountryNbBodiesPtr
+	sourceCountry.Step = *sourceCountryStepPtr
+	barneshut.CutoffDistance = *cutoffPtr
 	server.Info.Printf("CutoffDistance %f", barneshut.CutoffDistance)
-
-	{
-		_, errScan := fmt.Sscanf(*shutdownCriteriaPtr, "%f", &barneshut.ShutdownCriteria)
-		if errScan != nil {
-			log.Fatal(errScan)
-			return
-		}
-	}
+	barneshut.ShutdownCriteria = *shutdownCriteriaPtr
 	server.Info.Printf("Studown Criteria %f", barneshut.ShutdownCriteria)
-	port := 8000
-	{
-		_, errScan := fmt.Sscanf(*portPtr, "%d", &port)
-		if errScan != nil {
-			log.Fatal(errScan)
-			return
-		}
-	}
+	port := *portPtr
+
 	server.Info.Printf("will listen on port %d", port)
 	r = barneshut.NewRun()
 
@@ -93,7 +62,11 @@ func main() {
 		sourceCountry.Step)
 
 	server.Info.Printf("filename for init %s", filename)
-	r.LoadConfig("../../../countries_input", filename)
+	r.LoadConfig("../../../../countries_input",
+		filename,
+		sourceCountry.Name,
+		sourceCountry.Step,
+		sourceCountry.NbBodies)
 
 	if !*startPtr {
 		r.SetState(barneshut.STOPPED)
@@ -301,8 +274,8 @@ func loadConfig(w http.ResponseWriter, req *http.Request) {
 	server.Info.Println(fileSlice[0])
 	// get the file name
 
-	loadResult := r.LoadConfig("../../../countries_input", fileSlice[0])
-	server.Info.Println("load result ", loadResult)
+	// loadResult := r.LoadConfig("../../../countries_input", fileSlice[0])
+	// server.Info.Println("load result ", loadResult)
 }
 
 // list config files in orig

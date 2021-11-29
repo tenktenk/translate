@@ -55,10 +55,10 @@ func main() {
 
 	// load france
 	france := new(models.CountryWithBodies).Stage()
-	franceSpecs := (&models.CountrySpec{Name: "fra", NbBodies: 934136, Step: 8725}).Stage()
-	france.Name = franceSpecs.Name
-	france.NbBodies = franceSpecs.NbBodies
-	france.Step = franceSpecs.Step
+	// franceSpecs := (&models.CountrySpec{Name: "fra", NbBodies: 934136, Step: 8725}).Stage()
+	france.Name = models.France.Name
+	france.NbBodies = models.France.NbBodies
+	france.Step = models.France.Step
 	france.Init("../../../../countries_input")
 
 	models.Stage.Commit()

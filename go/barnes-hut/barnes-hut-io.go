@@ -1,14 +1,19 @@
 package barneshut
 
 import (
+	"archive/zip"
 	"bytes"
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/tenktenk/translate/go/quadtree"
+	// "github.com/tenktenk/translate/go/models"
 )
 
 const (
@@ -98,55 +103,64 @@ func (r *Run) CaptureConfigBase64() bool {
 
 // load configuration from filename (does not contain path)
 // works only if state is STOPPED
-func (r *Run) LoadConfig(path string, filename string) bool {
+func (r *Run) LoadConfig(path string, filename string, countryTrigram string, step int, nbBodies int) bool {
 	Info.Printf("LoadConfig file %s", filename)
+
+	var bodsFileReader io.ReadCloser
+	var bodsFileReaderErr error
 
 	if r.state == STOPPED {
 
-		// get the number of steps in the file name
-		// var countryName string
-		for index, runeValue := range filename {
-			Trace.Printf("%#U starts at byte position %d\n", runeValue, index)
-		}
-		ctry := filename[5:8]
-		r.country = ctry
+		filename = filepath.Join(path, filename)
 
-		// parse the number of elements
-		nbElementString := filename[9:17]
-		var nbBodies int
-		_, errScanNbItems := fmt.Sscanf(nbElementString, "%08d", &nbBodies)
-		if errScanNbItems != nil {
-			log.Fatal(errScanNbItems)
-			return false
-		}
-		Info.Printf("Nb bodies in filename %d", nbBodies)
+		// check if file is missing.
+		if _, err := os.Stat(filename); os.IsNotExist(err) {
+			Info.Printf("File %s is missing, trying to find the zip file", filename)
 
-		// parse the step
-		stepString := filename[18:23]
-		nbItems, errScan := fmt.Sscanf(stepString, "%05d", &r.step)
-		if errScan != nil {
-			log.Fatal(errScan)
-			return false
-		}
-		Trace.Printf("nb item parsed in file name %d (should be one)\n", nbItems)
+			zipFilename := filename + ".zip"
+			Info.Printf("Checking if zip file %s is present", zipFilename)
+			if _, err := os.Stat(zipFilename); os.IsNotExist(err) {
+				log.Fatal(err)
+				return false
+			}
 
-		filename = filepath.Join("../../../countries_input", filename)
-		renderingMutex.Lock()
-		file, err := os.Open(filename)
-		if err != nil {
-			log.Fatal(err)
-			return false
+			Info.Printf("Loading zip file %s", zipFilename)
+			reader, err := zip.OpenReader(zipFilename)
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer reader.Close()
+			Info.Printf("Loading zip file %s done", zipFilename)
+
+			for _, file := range reader.File {
+
+				bodsFileReader, bodsFileReaderErr = file.Open()
+				Info.Printf("Open bods file %s in zip", file.Name)
+				if bodsFileReaderErr != nil {
+					log.Fatal(bodsFileReaderErr)
+					return false
+				}
+				defer bodsFileReader.Close()
+
+			}
 		}
 
-		jsonParser := json.NewDecoder(file)
-		if err = jsonParser.Decode(r.bodies); err != nil {
+		jsonParser := json.NewDecoder(bodsFileReader)
+
+		bodies := (make([]quadtree.Body, 0))
+		if err := jsonParser.Decode(&bodies); err != nil {
 			log.Fatal(fmt.Sprintf("parsing config file %s", err.Error()))
 		}
-		Info.Printf("Country is %s, step is %d", ctry, r.step)
+		Info.Printf("nb item parsed in file for orig %d\n", len(bodies))
+
+		bodsFileReader.Close()
+
+		// r.bodies = countryToLoad.GetBodies()
+
+		renderingMutex.Lock()
+
+		r.bodies = &bodies
 		Info.Printf("nb item parsed in file %d\n", len(*r.bodies))
-
-		file.Close()
-
 		r.Init(r.bodies)
 
 		renderingMutex.Unlock()

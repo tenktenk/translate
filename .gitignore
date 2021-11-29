@@ -21,3 +21,4 @@ gini_out.csv
 status_out.csv
 conf*.gif
 go/cmd/translate/__debug_bin
+go/cmd/tenksim/*/*.bods

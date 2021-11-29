@@ -43,6 +43,10 @@ const (
 	SPREAD_CONFIGURATION   = "SPREAD_CONFIGURATION"
 )
 
+func (country *CountryWithBodies) GetBodies() (bodiesOrig *[]quadtree.BodyXY) {
+	return country.bodiesOrig
+}
+
 // number of village per X or Y axis. For 10 000 villages, this number is 100
 // this value can be set interactively during the run
 var nbVillagePerAxe int = 100
