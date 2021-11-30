@@ -24,6 +24,8 @@ var (
 	logDBFlag  = flag.Bool("logDB", false, "log mode for db")
 	logGINFlag = flag.Bool("logGIN", false, "log mode for gin")
 	apiFlag    = flag.Bool("api", false, "it true, use api controllers instead of default controllers")
+
+	datastorePath = flag.String("datastorePath", "../../../../countries_input", "path to datastore")
 )
 
 func main() {
@@ -54,12 +56,20 @@ func main() {
 	dbDB.SetMaxOpenConns(1)
 
 	// load france
-	france := new(models.CountryWithBodies).Stage()
-	// franceSpecs := (&models.CountrySpec{Name: "fra", NbBodies: 934136, Step: 8725}).Stage()
-	france.Name = models.France.Name
-	france.NbBodies = models.France.NbBodies
-	france.Step = models.France.Step
-	france.Init("../../../../countries_input")
+	// france := new(models.CountryWithBodies).Stage()
+	// // franceSpecs := (&models.CountrySpec{Name: "fra", NbBodies: 934136, Step: 8725}).Stage()
+	// france.Name = models.France.Name
+	// france.NbBodies = models.France.NbBodies
+	// france.Step = models.France.Step
+	// france.Init(*datastorePath)
+
+	currentTranslation := models.GetTranslateCurrent(*datastorePath)
+	_ = currentTranslation
+
+	_, _, _, xSpread, ySpread, _ :=
+		currentTranslation.BodyCoordsInSourceCountry(45.0, 4.0)
+
+	log.Println("translate of 45 4 is ", xSpread, " ", ySpread)
 
 	models.Stage.Commit()
 
