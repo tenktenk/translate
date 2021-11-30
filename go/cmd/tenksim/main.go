@@ -28,6 +28,8 @@ var (
 	portPtr                  = flag.Int("port", 8000, "listening port")
 	startPtr                 = flag.Bool("start", false, "if true, start simulation run immediatly")
 	captureGifStep           = flag.Int("stepsBetweenGifs", 40, "steps between gif")
+
+	datastorePath = flag.String("datastorePath", "../../../../countries_input", "path to datastore")
 )
 
 //
@@ -62,7 +64,7 @@ func main() {
 		sourceCountry.Step)
 
 	server.Info.Printf("filename for init %s", filename)
-	r.LoadConfig("../../../../countries_input",
+	r.LoadConfig(*datastorePath,
 		filename,
 		sourceCountry.Name,
 		sourceCountry.Step,
