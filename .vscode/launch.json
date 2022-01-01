@@ -42,7 +42,7 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${workspaceFolder}/go/sim_server",
+            "program": "${workspaceFolder}/go/cmd/sim_server",
             "args": [
                 "-sourceCountry",
                 "hti",
